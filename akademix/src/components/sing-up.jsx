@@ -1,3 +1,5 @@
+
+
 // import React, { useState } from "react";
 // import {
 //   Container,
@@ -18,10 +20,22 @@
 //   const [lastName, setLastName] = useState("");
 //   const [email, setEmail] = useState("");
 //   const [password, setPassword] = useState("");
-//   const [role, setRole] = useState(""); // özel ders almak veya vermek rolünü tutar
+//   const [passwordRepeat, setPasswordRepeat] = useState(""); // Yeni eklendi
+//   const [role, setRole] = useState(""); 
 
-//   const handleSignUp = () => {
-//     // Hesap oluşturma işlemi burada gerçekleştirilecek
+//   const handleSignUp = (e) => {
+//     e.preventDefault(); // Form submit işlemini engeller
+
+//     if (!firstName || !lastName || !email || !password || !passwordRepeat) {
+//       alert("Lütfen tüm alanları doldurunuz.");
+//       return;
+//     }
+
+//     if (password !== passwordRepeat) {
+//       alert("Şifreler uyuşmuyor. Lütfen tekrar kontrol ediniz.");
+//       return;
+//     }
+
 //     console.log("Ad:", firstName);
 //     console.log("Soyad:", lastName);
 //     console.log("E-posta:", email);
@@ -34,7 +48,7 @@
 //       <Typography variant="h4" align="center" gutterBottom>
 //         Hesap Oluştur
 //       </Typography>
-//       <form>
+//       <form onSubmit={handleSignUp}> {/* onSubmit olayı eklendi */}
 //         <Grid container spacing={2}>
 //           <Grid item xs={12} sm={6}>
 //             <TextField
@@ -74,6 +88,16 @@
 //             />
 //           </Grid>
 //           <Grid item xs={12}>
+//             <TextField
+//               variant="outlined"
+//               fullWidth
+//               label="Şifre Tekrar"
+//               type="password"
+//               value={passwordRepeat}
+//               onChange={(e) => setPasswordRepeat(e.target.value)}
+//             />
+//           </Grid>
+//           <Grid item xs={12}>
 //             <FormControl>
 //               <FormLabel id="demo-row-radio-buttons-group-label">
 //                 Özel Ders Tercihi
@@ -100,10 +124,10 @@
 //           </Grid>
 //           <Grid item xs={12}>
 //             <Button
+//               type="submit" 
 //               variant="contained"
 //               color="primary"
 //               fullWidth
-//               onClick={handleSignUp}
 //             >
 //               Hesap Oluştur
 //             </Button>
@@ -121,7 +145,6 @@
 //     </Container>
 //   );
 // }
-
 
 
 import React, { useState } from "react";
@@ -150,7 +173,7 @@ export default function SignUp() {
   const handleSignUp = (e) => {
     e.preventDefault(); // Form submit işlemini engeller
 
-    if (!firstName || !lastName || !email || !password || !passwordRepeat) {
+    if (!firstName || !lastName || !email || !password || !passwordRepeat || !role) {
       alert("Lütfen tüm alanları doldurunuz.");
       return;
     }
@@ -160,11 +183,31 @@ export default function SignUp() {
       return;
     }
 
-    console.log("Ad:", firstName);
-    console.log("Soyad:", lastName);
-    console.log("E-posta:", email);
-    console.log("Şifre:", password);
-    console.log("Rol:", role);
+    // Kayıt verilerini backend'e gönderme
+    const formData = {
+      firstName,
+      lastName,
+      email,
+      password,
+      role,
+    };
+
+    // Backend API çağrısı
+    fetch('/api/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      // Kullanıcıyı giriş sayfasına yönlendirme veya başarılı kayıt işlemini yönetme
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
   };
 
   return (
@@ -223,25 +266,25 @@ export default function SignUp() {
           </Grid>
           <Grid item xs={12}>
             <FormControl>
-              <FormLabel id="demo-row-radio-buttons-group-label">
-                Özel Ders Tercihi
+              <FormLabel id="role-radio-buttons-group-label">
+                Rol Seçiniz
               </FormLabel>
               <RadioGroup
                 row
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="row-radio-buttons-group"
+                aria-labelledby="role-radio-buttons-group-label"
+                name="role-radio-buttons-group"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
               >
                 <FormControlLabel
-                  value="al"
+                  value="student"
                   control={<Radio />}
-                  label="Özel Ders Almak"
-                  onChange={() => setRole("al")}
+                  label="Öğrenci"
                 />
                 <FormControlLabel
-                  value="ver"
+                  value="teacher"
                   control={<Radio />}
-                  label="Özel Ders Vermek"
-                  onChange={() => setRole("ver")}
+                  label="Öğretmen"
                 />
               </RadioGroup>
             </FormControl>
