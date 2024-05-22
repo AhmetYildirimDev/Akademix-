@@ -1,17 +1,17 @@
 import * as React from "react";
+import { useNavigate } from 'react-router-dom';
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
-// import MenuIcon from '@mui/icons-material/Menu';
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-// import AdbIcon from '@mui/icons-material/Adb';
+import logo from '../assets/logo-medium.png';
 
 const pages = ["Sürekli Eğitim Merkezi", "Pricing", "Blog"];
 const settings = ["Profil", "İlanlarım", "İlan Ver", "Mesajlarım", "Çıkış Yap"];
@@ -19,12 +19,17 @@ const settings = ["Profil", "İlanlarım", "İlan Ver", "Mesajlarım", "Çıkı�
 export default function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElSEM, setAnchorElSEM] = React.useState(null);
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
+  };
+  const handleOpenSEMMMenu = (event) => {
+    setAnchorElSEM(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
@@ -35,28 +40,29 @@ export default function Navbar() {
     setAnchorElUser(null);
   };
 
+  const handleCloseSEMMenu = () => {
+    setAnchorElSEM(null);
+  };
+
+  const handleMenuClick = (path) => {
+    handleCloseSEMMenu();
+    navigate(path);
+  };
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
-          <Typography
-            variant="h6"
-            noWrap
+          <Box
             component="a"
             href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
             }}
           >
-            LOGO
-          </Typography>
+            <img src={logo} alt="logo" style={{ height: '40px', marginRight: '10px', borderRadius:'5px' }} />
+          </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -67,7 +73,6 @@ export default function Navbar() {
               onClick={handleOpenNavMenu}
               color="inherit"
             >
-              {/* <MenuIcon /> */}
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -88,40 +93,114 @@ export default function Navbar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
+                page === "Sürekli Eğitim Merkezi" ? (
+                  <div key={page}>
+                    <Button
+                      onClick={handleOpenSEMMMenu}
+                      sx={{ my: 2, color: "white", display: "block" }}
+                    >
+                      {page}
+                    </Button>
+                    <Menu
+                      anchorEl={anchorElSEM}
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "left",
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "left",
+                      }}
+                      open={Boolean(anchorElSEM)}
+                      onClose={handleCloseSEMMenu}
+                    >
+                      <MenuItem onClick={() => handleMenuClick('/request-form')}>
+                        <Typography textAlign="center">Ders İste</Typography>
+                      </MenuItem>
+                      <MenuItem onClick={handleCloseSEMMenu}>
+                        <Typography textAlign="center">Ders Ver</Typography>
+                      </MenuItem>
+                      <MenuItem onClick={handleCloseSEMMenu}>
+                        <Typography textAlign="center">Dersleri Gör</Typography>
+                      </MenuItem>
+                      <MenuItem onClick={handleCloseSEMMenu}>
+                        <Typography textAlign="center">Ders Seç</Typography>
+                      </MenuItem>
+                    </Menu>
+                  </div>
+                ) : (
+                  <Button
+                    key={page}
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                  >
+                    {page}
+                  </Button>
+                )
               ))}
             </Menu>
           </Box>
-          {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
-          <Typography
-            variant="h5"
-            noWrap
+
+          <Box
             component="a"
             href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
             }}
           >
-            LOGO
-          </Typography>
+            <img src={logo} alt="logo" style={{ height: '40px', marginRight: '10px' }} />
+          </Box>
+          
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
+              page === "Sürekli Eğitim Merkezi" ? (
+                <div key={page}>
+                  <Button
+                    onClick={handleOpenSEMMMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                  >
+                    {page}
+                  </Button>
+                  <Menu
+                    anchorEl={anchorElSEM}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
+                    open={Boolean(anchorElSEM)}
+                    onClose={handleCloseSEMMenu}
+                  >
+                    <MenuItem onClick={() => handleMenuClick('/request-form')}>
+                      <Typography textAlign="center">Ders İste</Typography>
+                    </MenuItem>
+                    <MenuItem onClick={handleCloseSEMMenu}>
+                      <Typography textAlign="center">Ders Ver</Typography>
+                    </MenuItem>
+                    <MenuItem onClick={handleCloseSEMMenu}>
+                      <Typography textAlign="center">Dersleri Gör</Typography>
+                    </MenuItem>
+                    <MenuItem onClick={handleCloseSEMMenu}>
+                      <Typography textAlign="center">Ders Seç</Typography>
+                    </MenuItem>
+                  </Menu>
+                </div>
+              ) : (
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page}
+                </Button>
+              )
             ))}
           </Box>
 
