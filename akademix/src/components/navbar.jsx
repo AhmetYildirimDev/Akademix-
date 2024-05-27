@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { useNavigate } from 'react-router-dom';
 import AppBar from "@mui/material/AppBar";
@@ -55,10 +56,11 @@ export default function Navbar() {
         <Toolbar disableGutters>
           <Box
             component="a"
-            href="#app-bar-with-responsive-menu"
+            onClick={() => navigate('/')}
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
+              cursor: 'pointer',
             }}
           >
             <img src={logo} alt="logo" style={{ height: '40px', marginRight: '10px', borderRadius:'5px' }} />
@@ -144,11 +146,12 @@ export default function Navbar() {
 
           <Box
             component="a"
-            href="#app-bar-with-responsive-menu"
+            onClick={() => navigate('/')}
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
+              cursor: 'pointer',
             }}
           >
             <img src={logo} alt="logo" style={{ height: '40px', marginRight: '10px' }} />
@@ -205,7 +208,7 @@ export default function Navbar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title="Ayarları Aç">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton>
@@ -227,7 +230,7 @@ export default function Navbar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={() => handleMenuClick(setting === 'Profil' ? '/profile' : '#')}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
